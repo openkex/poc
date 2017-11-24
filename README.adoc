@@ -1,6 +1,6 @@
-## Open Key Exchange: Prove of Concept
+## Open Key Exchange: Proof of Concept
 
-This repository holds the current Prove of Concept code of openKex.
+This repository holds the current Proof of Concept code of openKex.
 
 ### Related documents
 
