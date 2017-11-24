@@ -1,0 +1,12 @@
+message StatementCertificateOwner {
+
+    enum CertificateType {
+        X509 = 0;
+        PGP = 1;
+    }
+
+    optional CertificateType type = 1;
+    optional bytes certificate = 2;
+    optional bytes signature = 3;
+
+}

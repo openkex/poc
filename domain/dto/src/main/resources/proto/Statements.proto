@@ -1,0 +1,13 @@
+import "StatementClaimKexId.proto";
+import "StatementCertificateOwner.proto";
+import "StatementPublicAccountOwner.proto";
+
+message Statements {
+    optional uint64 issuerKexId = 1;
+    optional uint64 signatureDate = 2;
+    optional bytes previousHash = 3;
+    optional uint64 previousRound = 4;
+    optional StatementClaimKexId claimKexId = 5;
+    optional StatementCertificateOwner certificateOwner = 6;
+    optional StatementPublicAccountOwner publicAccountOwner = 7;
+}

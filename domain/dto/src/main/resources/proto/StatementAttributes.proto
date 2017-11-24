@@ -1,0 +1,12 @@
+message StatementAttributes {
+
+    enum Type {
+        EMAIL = 0;
+        MSISDN = 1;
+        NICK_NAME = 2;
+    }
+
+    optional Type type = 1;
+    optional string value = 2;
+    optional bytes maskedValue = 3;
+}

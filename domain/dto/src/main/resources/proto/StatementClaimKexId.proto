@@ -1,0 +1,6 @@
+import "SignatureAlgorithm.proto";
+
+message StatementClaimKexId {
+    optional SignatureAlgorithm algorithm = 1;
+    optional bytes key = 2;
+}

@@ -1,0 +1,15 @@
+## Open Key Exchange: Prove of Concept
+
+This repository holds the current Prove of Concept code of openKex.
+
+### Related documents
+
+openKex documents are here https://github.com/openKex/docs
+
+For introduction and  high level concept see: "intro.pdf" +
+For technical details see: "design.pdf"
+
+### Building and Running
+
+The build requires JDK 8 (OpenJDK or Oracle) and Apache Maven. +
+Most functions are covered by unit test. Some test require specific hardware (e.g. smart cards).

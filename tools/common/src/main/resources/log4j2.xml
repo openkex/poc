@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+
+    <Properties>
+        <!-- default override with -Dlog4j2.level=warn -->
+        <Property name="log4j2.level">info</Property>
+    </Properties>
+
+    <Appenders>
+        <!-- see: http://logging.apache.org/log4j/2.x/manual/appenders.html
+                  http://logging.apache.org/log4j/2.x/manual/layouts.html#PatternLayout -->
+        <Console name="console" target="SYSTEM_OUT">
+            <!-- undocumented option * for %c -->
+            <!-- 18:58:10.281 [main] TRACE or.op.test.logging.MainLog4j2 trace -->
+            <!--<PatternLayout pattern="%d{DEFAULT} [%t] %-5level %c{2.2.*} %msg%n"/>-->
+
+            <!-- "highlight": use ansi colors, need to add http://jansi.fusesource.org/ in case of windows -->
+            <!--<PatternLayout pattern="%highlight{%d{DEFAULT} [%t] %-5level %c{2.2.*} %msg%n}"/>-->
+            <!-- %30.30c{2.} shorten package names -->
+            <PatternLayout pattern="%d{HH:mm:ss,SSS} %-5level [%t] %X %c{2.} %msg%n"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <!-- selective level limits -->
+        <Logger name="org.apache" level="info"/>
+        <!-- never mute timer -->
+        <Logger name="org.openkex.tools.Timer" level="info"/>
+
+        <Root level="${sys:log4j2.level}">
+            <AppenderRef ref="console"/>
+        </Root>
+    </Loggers>
+</Configuration>

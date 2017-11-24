@@ -1,0 +1,85 @@
+/*
+ * Copyright 2016 openKex. All rights reserved.
+ *
+ * This file is subject to the terms and conditions defined in
+ * file 'LICENSE.txt', which is part of this source code package.
+ */
+
+@startuml
+
+' skinparam monochrome true
+
+' clint
+package Client {
+    [client-api2]
+    [client-proxy]
+    [client-core]
+    [key-store-api2] as "key-store-api"
+    [key-store2] as "key-store"
+    [client-store]
+}
+
+' the tomcat server
+package "Sever 1" {
+
+[client-hessian-srv]
+[server-hessian-srv]
+[server-proxy2] as "server-proxy"
+
+    ' core implementing domain logic
+    package backend {
+        [client-api]
+        [server-api]
+        [server-api3] as "server-api"
+        [key-store-api]
+        [key-store]
+        [server-core]
+        [block-store]
+        [validator]
+        [server-registry]
+    }
+}
+
+package "Sever 2 (calling)" {
+     [server-api2]
+     [server-proxy]
+}
+
+package "Server 3 (called)" {
+     [server-hessian-srv2] as "server-hessian-srv"
+     [server-api4] as "server-api"
+     [server-hessian-srv2] -d-> [server-api4]
+}
+
+' client
+[client-core] -> [client-api2]
+[client-core] -l-> [key-store-api2]
+[key-store-api2] -d-> [key-store2]
+[client-core] -d-> [client-store]
+
+' server
+[server-core] -d-> (block-store)
+[server-core] -l-> [key-store-api]
+[server-core] -d-> [server-api3]
+[server-core] -r-> [server-registry]
+[server-core] -u-> [validator]
+[key-store-api] -d-> [key-store]
+[server-api3] -> [server-proxy2]
+[server-proxy2] -> [server-hessian-srv2] : https
+
+' client api
+[client-api2] as "client-api"
+[client-api2] -d-> [client-proxy]
+[client-proxy] -d-> [client-hessian-srv] : https
+[client-hessian-srv] -d-> [client-api]
+[client-api] -d-> [server-core]
+
+
+' server api
+[server-api2] as "server-api"
+[server-api2] -d-> [server-proxy]
+[server-proxy] -d-> [server-hessian-srv] : https
+[server-hessian-srv] -d-> [server-api]
+[server-api] -d-> [server-core]
+
+@enduml

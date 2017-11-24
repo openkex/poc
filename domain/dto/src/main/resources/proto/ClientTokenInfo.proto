@@ -1,0 +1,4 @@
+message ClientInfo {
+    optional uint64 kexId = 1;
+    optional uint64 expiryTime = 2;
+}

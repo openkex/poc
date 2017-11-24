@@ -1,0 +1,11 @@
+message StatementPublicAccountOwner {
+
+    enum Type {
+        TWITTER = 0;
+        FACEBOOK = 1;
+        GITHUB = 2;
+    }
+
+    optional Type type = 1;
+    optional string accountId = 2;
+}

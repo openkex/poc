@@ -1,0 +1,22 @@
+<FindBugsFilter>
+    <!-- http://findbugs.sourceforge.net/manual/filter.html -->
+
+    <!-- http://findbugs.sourceforge.net/bugDescriptions.html -->
+    <!-- blacklisting specific bugs here -->
+
+    <Match>
+        <!-- this bugs is reported when returning a byte[]
+             calling "clone" (or using other "stuff") has too much runtime impact -->
+        <Bug pattern="EI_EXPOSE_REP"/>
+    </Match>
+    <Match>
+        <!-- this bugs is reported when returning a byte[]
+             calling "clone" (or using other "stuff") has too much runtime impact -->
+        <Bug pattern="EI_EXPOSE_REP2"/>
+    </Match>
+    <Match>
+        <!-- don't see the point, if javadoc is clear -->
+        <Bug pattern="PZLA_PREFER_ZERO_LENGTH_ARRAYS"/>
+    </Match>
+
+</FindBugsFilter>

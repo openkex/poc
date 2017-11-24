@@ -1,0 +1,281 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.openkex</groupId>
+    <artifactId>kex-root</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <licenses>
+        <license>
+            <name>gpl-3.0</name>
+            <url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
+        </license>
+    </licenses>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <bouncycastle.version>1.58</bouncycastle.version>
+        <jackson.version>2.9.1</jackson.version>
+        <slf4j.version>1.7.25</slf4j.version>
+        <log4j2.version>2.9.1</log4j2.version>
+        <junit.version>4.12</junit.version>
+        <checkstyle.maven.version>2.17</checkstyle.maven.version>
+        <checkstyle.version>8.2</checkstyle.version>
+        <findbugs.version>3.0.5</findbugs.version>
+        <jacoco.version>0.7.9</jacoco.version>
+        <maven-javadoc-plugin.version>3.0.0-M1</maven-javadoc-plugin.version>
+        <maven-exec-plugin.version>1.6.0</maven-exec-plugin.version>
+        <maven-surefire-plugin.version>2.12.4</maven-surefire-plugin.version>
+        <maven-enforcer-plugin.version>3.0.0-M1</maven-enforcer-plugin.version>
+        <tomcat.version>9.0.1</tomcat.version>
+        <undertow.version>1.4.21.Final</undertow.version>
+        <hessian.version>4.0.51</hessian.version>
+        <shade.plugin.version>3.0.0</shade.plugin.version>
+    </properties>
+
+    <modules>
+        <module>build</module>
+        <module>tools</module>
+        <module>cardio</module>
+        <module>server</module>
+        <module>client</module>
+        <module>keystore</module>
+        <module>domain</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- slf4j API -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+
+            <!-- log4j2 binding -->
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-slf4j-impl</artifactId>
+                <version>${log4j2.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-core</artifactId>
+                <version>${log4j2.version}</version>
+                <scope>runtime</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.logging.log4j</groupId>
+                <artifactId>log4j-api</artifactId>
+                <version>${log4j2.version}</version>
+            </dependency>
+
+            <!-- remote -->
+            <dependency>
+                <groupId>com.caucho</groupId>
+                <artifactId>hessian</artifactId>
+                <version>${hessian.version}</version>
+            </dependency>
+
+            <!-- crypto -->
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-jdk15on</artifactId>
+                <version>${bouncycastle.version}</version>
+            </dependency>
+            <!-- for rather strange reasons bcprov-jdk15on comes without debug info
+                 this alternative artifact resolved this issue. -->
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcprov-debug-jdk15on</artifactId>
+                <version>${bouncycastle.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.bouncycastle</groupId>
+                <artifactId>bcpkix-jdk15on</artifactId>
+                <version>${bouncycastle.version}</version>
+            </dependency>
+
+            <!-- tests -->
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <licenses>
+        <license>
+            <name>GNU General Public License, Version 3</name>
+            <url>http://www.gnu.org/licenses/gpl.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven-surefire-plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>${maven-javadoc-plugin.version}</version>
+                    <configuration>
+                        <show>private</show>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-checkstyle-plugin</artifactId>
+                    <version>${checkstyle.maven.version}</version>
+                    <executions>
+                        <execution>
+                            <id>verify-style</id>
+                            <phase>process-classes</phase>
+                            <goals>
+                                <goal>check</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <configLocation>checkstyle.xml</configLocation>
+                        <suppressionsLocation>checkstyle-suppressions.xml</suppressionsLocation>
+                        <headerLocation>checkstyle-header.txt</headerLocation>
+                        <consoleOutput>true</consoleOutput>
+                        <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>com.puppycrawl.tools</groupId>
+                            <artifactId>checkstyle</artifactId>
+                            <version>${checkstyle.version}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.openkex</groupId>
+                            <artifactId>kex-build</artifactId>
+                            <version>1.0-SNAPSHOT</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>${maven-enforcer-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>enforce</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <!-- http://maven.apache.org/enforcer/enforcer-rules/ -->
+                            <rules>
+                                <!-- Don't let maven "deal sloppy" with transitive dependency conflicts -->
+                                <dependencyConvergence/>
+                                <!-- Don't allow duplicates -->
+                                <banDuplicatePomDependencyVersions/>
+                                <!-- too much? -->
+                                <!--<banTransitiveDependencies/>-->
+                                <requireMavenVersion>
+                                    <version>3.5.0</version>
+                                </requireMavenVersion>
+                            </rules>
+                            <!-- only warn, don't break build -->
+                            <!--<fail>false</fail>-->
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <!-- activate coverage report with "mvn clean test jacoco:report -Pjacoco", find results in target/site/jacoco -->
+            <id>jacoco</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>${jacoco.version}</version>
+                        <configuration>
+                            <skip>${skipTests}</skip>
+                        </configuration>
+                        <!-- todo: works without execution magic? -->
+                        <executions>
+                            <execution>
+                                <id>default-prepare-agent</id>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>default-report</id>
+                                <!-- run report generation in post-integration-test phase instead of prepare-package
+                                to consider unit and integration test results -->
+                                <phase>post-integration-test</phase>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+
+        <profile>
+            <!-- activate findbugs report with "mvn clean test findbugs:check -Pfindbugs"
+                 find results in build output -->
+            <id>findbugs</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <!-- https://gleclaire.github.io/findbugs-maven-plugin/
+                             http://findbugs.sourceforge.net/manual/ -->
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>findbugs-maven-plugin</artifactId>
+                        <version>${findbugs.version}</version>
+                        <configuration>
+                            <!-- this parameter is only documented in source code:
+                            https://github.com/gleclaire/findbugs-maven-plugin/blob/master/src/main/groovy/org/codehaus/mojo/findbugs/FindBugsMojo.groovy
+                            Threshold of minimum bug severity to report. Valid values are High, Default, Low, Ignore, and Exp (for experimental). -->
+                            <threshold>Low</threshold>
+                            <!-- only report bugs -->
+                            <failOnError>false</failOnError>
+                            <excludeFilterFile>findbugsExclude.xml</excludeFilterFile>
+                            <!-- minimal speed up, still slow -->
+                            <!--<fork>false</fork>-->
+                        </configuration>
+                        <dependencies>
+                            <dependency>
+                                <groupId>org.openkex</groupId>
+                                <artifactId>kex-build</artifactId>
+                                <version>1.0-SNAPSHOT</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>

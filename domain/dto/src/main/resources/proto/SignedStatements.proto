@@ -1,0 +1,6 @@
+import "Statements.proto";
+
+message SignedStatements {
+    optional Statements statements = 1;
+    optional bytes signatureBytes = 2;
+}

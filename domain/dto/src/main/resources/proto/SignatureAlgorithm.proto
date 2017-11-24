@@ -1,0 +1,6 @@
+enum SignatureAlgorithm {
+    ECDSA_SECP256K1 = 0;
+    ED25519 = 1;
+    ED448 = 2;
+    DUMMY = 3;
+}
